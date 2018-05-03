@@ -28,3 +28,6 @@ phpunit.phar
 
 tests/_output/*
 tests/_support/_generated
+#Ctags index
+.tags_sorted_by_file
+.tags

@@ -11,8 +11,9 @@ class IndexController extends CommonController
 	
 	public function actionIndex()
 	{
-		// var_dump(Yii::$app->cache);
+		// Yii::trace('this is a trace!');
 		
+		// var_dump(Yii::$app->cache);
 		// die;
 		// Yii::$app->redis->set('predis','120');
 		// $redis=Yii::$app->redis;

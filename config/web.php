@@ -16,6 +16,15 @@ $config = [
     ],
     'components' => [
 
+        'session'=>[
+            'class'=>'yii\redis\Session',
+            'redis' => [
+               'hostname' => 'localhost',
+               'port' => 6379,
+               'database' => 3,
+            ],
+            'keyPrefix'=>'iflash',
+        ],
         'redis' => [
             'class' => 'yii\redis\Connection',
             'hostname' => 'localhost',
@@ -67,7 +76,7 @@ $config = [
             'identityCookie'=>['name'=>'__admin_identity','httpOnly'=>true], //renewIdentityCookie
             'loginUrl'=>['/admin/public/login'],
         ],
-        'errorHandler' => [
+        'errorHandler' => [  //自定义error页面
             'errorAction' => 'site/error',
         ],
         'mailer' => [
@@ -101,7 +110,7 @@ $config = [
         ],        
         
         'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'traceLevel' => YII_DEBUG ? 3 : 0, //设定日志的追踪信息
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
@@ -113,8 +122,19 @@ $config = [
         
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'showScriptName' => true,
+            'showScriptName' => false, //是否显示index.php
+            'suffix'=>'.html', //后缀
             'rules' => [
+                '<controller:(index|cart|order)>'=>'<controller>/index',
+                'auth'=>'member/auth',
+                'product-category-<cateid:\d+>'=>'product/index',
+                'product-<productid:\d+>'=>'product/detail',
+                'order-check-<orderid:\d+>' => 'order/check',
+                [
+                    'pattern'=>'myback',
+                    'route'=>'/admin/default/index',
+                    'suffix'=>'.shtml',
+                ]
                  // '<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
             ],
         ],
