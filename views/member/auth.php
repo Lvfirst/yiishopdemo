@@ -35,6 +35,7 @@
                     ]); ?>
                         <?php echo $form->field($model, 'loginname')->textInput(['class' => 'le-input']); ?>
                         <?php echo $form->field($model, 'userpass')->passwordInput(['class' => 'le-input']); ?>
+                 
                         <div class="field-row clearfix">
                         <?php echo $form->field($model, 'rememberMe')->checkbox([
                             'template' => '<span class="pull-left"><label class="content-color">{input} <span class="bold">记住我</span></label></span>',

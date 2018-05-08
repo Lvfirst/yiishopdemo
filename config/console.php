@@ -12,6 +12,13 @@ $config = [
             "@doctorjason/mailerqueue"=>"@vendor/doctorjason/mailerqueue/src"
     ],    
     'components' => [
+
+        'asyncLog'=>[
+            'class'=>'\\app\\models\\Kafka',
+            'broker_list'=>'192.168.137.129:9092',
+            'topic'=>'asynclog',
+        ],
+
         'redis' => [
             'class' => 'yii\redis\Connection',
             'hostname' => 'localhost',
@@ -47,12 +54,21 @@ $config = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+      
         'log' => [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                 ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['info'],
+                    'categories' => ['testkafka'],
+                    'logVars' => [],
+                    'exportInterval' => 1, //有一条消息就刷到文件里
+                    'logFile' => '@app/runtime/logs/Kafka.log',
+                ]
             ],
         ],
         'db' => $db,

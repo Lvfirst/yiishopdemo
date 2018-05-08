@@ -157,7 +157,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public function login($data)
     {
-        var_dump($data);
+        // var_dump($data);
         $this->scenario='login';
         if($this->load($data) && $this->validate())
         {

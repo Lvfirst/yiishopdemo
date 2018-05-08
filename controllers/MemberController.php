@@ -6,6 +6,8 @@ use Yii;
 use app\controllers\CommonController;
 class MemberController extends CommonController
 {
+
+    public $enableCsrfValidation = false;
     // 我们的 behaviors 行为控制器不对这些控制器组认证
     protected $except=['auth','logout','reg','qqreg','qqlogin','qqcallback'];
 	/**
@@ -17,6 +19,9 @@ class MemberController extends CommonController
 	 */
     public function actionAuth()
     {
+
+        // $a=Yii::$app->getRequest()->validateCsrfToken();
+        // var_dump($a);die;
     	$this->layout='layout2';
 
     	if(Yii::$app->request->isGet)

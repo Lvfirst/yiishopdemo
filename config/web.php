@@ -16,15 +16,21 @@ $config = [
     ],
     'components' => [
 
+        'asyncLog'=>[
+            'class'=>'\\app\\models\\Kafka',
+            'broker_list'=>'192.168.137.129:9092',
+            'topic'=>'asynclog',
+        ],       
         'session'=>[
             'class'=>'yii\redis\Session',
             'redis' => [
-               'hostname' => 'localhost',
+               'hostname' => '127.0.0.1',
                'port' => 6379,
-               'database' => 3,
+               'database' => 4,
             ],
             'keyPrefix'=>'iflash',
         ],
+
         'redis' => [
             'class' => 'yii\redis\Connection',
             'hostname' => 'localhost',
@@ -108,16 +114,55 @@ $config = [
                 ],               
             ],
         ],        
-        
-        'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0, //设定日志的追踪信息
-            'targets' => [
-                [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+        //Sentry
+        'sentry' => [
+                'class' => 'mito\sentry\Component',
+                'dsn' => 'https://8de97fe915204c53b36d81a564b0481e:c1f9e949794a491e8a7e749a8be32fef@sentry.io/1200839', // private DSN
+                'publicDsn'=>'https://8de97fe915204c53b36d81a564b0481e@sentry.io/1200839',
+                'environment' => 'development', // if not set, the default is `production`
+                'jsNotifier' => true, // to collect JS errors. Default value is `false`
+                'jsOptions' => [ // raven-js config parameter
+                    'whitelistUrls' => [ // collect JS errors from these urls  设定收集哪些链接的错误信息
+                    // 'http://staging.my-product.com',
+                    // 'https://my-product.com',
                 ],
             ],
         ],
+        'log' => [
+                'traceLevel' => YII_DEBUG ? 3 : 0, //设定日志的追踪信息
+                'targets' => [
+                    [
+                        'class' => 'yii\log\FileTarget',
+                        'levels' => ['error', 'warning'],
+                        'logFile'=>'@app/runtime/logs/application.log',//指定日志存储的地方
+                    ],
+                    [
+                        'class'=> 'yii\log\FileTarget',
+                        'levels'=> ['trace','info'],
+                        'logFile'=>'@app/runtime/logs/info.log', //存放日志的位置
+                        'categories'=>['myinfo'], //指定记录哪个类型，默认记录所有
+                        'logVars'=>['_COOKIE'],//记录哪些预定义的常量,比如$_SERVER $_COOKIE
+                    ],
+                    // 配置Sentry target
+                     [
+                        'class' => 'mito\sentry\Target',
+                        'levels' => ['error', 'warning'],
+                        'except' => [
+                            'yii\web\HttpException:404',
+                        ],
+                     ],
+                /*    [
+                       'class' => 'yii\log\EmailTarget',
+                       'mailer' => 'mailer',
+                       'levels' => ['error', 'warning'],
+                       'message' => [
+                        'from' => ['1655585137@qq.com'],
+                           'to' => ['534148647@qq.com'],
+                           'subject' => '日志处理',
+                       ],
+                   ],*/
+               ],
+           ],
         'db' => $db,
         
         'urlManager' => [
@@ -133,7 +178,7 @@ $config = [
                 [
                     'pattern'=>'myback',
                     'route'=>'/admin/default/index',
-                    'suffix'=>'.shtml',
+                    'suffix'=>'.html',
                 ]
                  // '<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
             ],
